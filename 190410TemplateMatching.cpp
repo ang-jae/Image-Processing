@@ -161,7 +161,7 @@ void ConnectedComponentLabeling(_TP** seg, int height, int width, int** label, i
 			bw.at<unsigned char>(i, j) = (unsigned char)seg[i][j];
 	}
 	Mat labelImage(bw.size(), CV_32S);
-	*no_label = connectedComponents(bw, labelImage, 8); // 0±îÁö Æ÷ÇÔµÈ °¹¼öÀÓ
+	*no_label = connectedComponents(bw, labelImage, 8); // 0ê¹Œì§€ í¬í•¨ëœ ê°¯ìˆ˜ì„
 
 	(*no_label)--;
 
@@ -199,7 +199,7 @@ void main_0312()//0312
 			for (int z = (-1)*thick; z <= thick; z++)
 			{
 				y = (int)(2 * x + 100 + 0.5);
-				//image[y+z][x+z] = 255; ¿¹¿ÜÃ³¸®¸¦ ÇØ ÁÖ¾î¾ß ÇÑ´Ù(width-1, height-1¸¦ ³Ñ´Â °æ¿ì)
+				//image[y+z][x+z] = 255; ì˜ˆì™¸ì²˜ë¦¬ë¥¼ í•´ ì£¼ì–´ì•¼ í•œë‹¤(width-1, height-1ë¥¼ ë„˜ëŠ” ê²½ìš°)
 				if (y < 0 || y >= height - 1) continue;
 				else image[y + z][x + z] = 255;
 			}
@@ -257,13 +257,13 @@ void DrawCircleFull(int**image, int height, int width, int a, int b, double r) /
 }
 
 
-void main_0312_2()//Á¡°ú Á÷¼± »çÀÌÀÇ °ø½Ä ÀÌ¿ë
+void main_0312_2()//ì ê³¼ ì§ì„  ì‚¬ì´ì˜ ê³µì‹ ì´ìš©
 {
 	int height, width;
 	int** image = ReadImage((char*)"pG.jpg", &height, &width);
 
 	//y= ax+b -> ax-y+b = 0 -> d = |ax0 - y0 + b| / sqrt(a*a + 1)
-	//ÇÔ¼öÈ­. ÀÔ·Â : a, b, Thickness, image, width, height
+	//í•¨ìˆ˜í™”. ì…ë ¥ : a, b, Thickness, image, width, height
 	double a = 1.0;
 	double b = 50.0;
 	double Thickness = 3.0;
@@ -356,7 +356,7 @@ int BilinearInterpolation(int**image, int width, int height, double xx, double y
 
 
 /* 03/19
-½Ö¼±Çü º¸°£ Bilinear Interpolation
+ìŒì„ í˜• ë³´ê°„ Bilinear Interpolation
 x = 1/(ad-bc) *{d(x'-t1) - b*(y'-t2)}
 y = 1/(ad-bc) *{-c(y'-t1) + a*(y'-t2)}
 */
@@ -386,7 +386,7 @@ void main_0319()
 	ImageShow((char*)"test", image_out, height, width);
 }
 
-//°¡¿îµ¥ Áß½ÉÀ¸·Î µ¹¸®±â -> ¼÷Á¦
+//ê°€ìš´ë° ì¤‘ì‹¬ìœ¼ë¡œ ëŒë¦¬ê¸° -> ìˆ™ì œ
 
 void main_0320()
 {
@@ -421,7 +421,7 @@ void main_0320()
 /*
 x' = (a b)  x  + t1
 y'	 (c d)  y	   t2
-¿¡¼­
+ì—ì„œ
 (x'-w/2-t1) = (a b)  (x-w/2) ==>  (a b)-1(x'-w/2-t1) + (w/2) = (x) ==> 1(d -b)(x' - w/2 - t1) + w/2
 (y'-h/2-t1) = (c d)  (y-h/2)      (c d)  (y'-h/2-t2)   (h/2)   (y)     D(-c a)(y' - h/2 - t1) + h/2
 */
@@ -434,8 +434,8 @@ void main_0320_2()
 	double theta = 45 * (3.14 / 180);
 	a = cos(theta);
 	b = (-1)*sin(theta);
-	c = sin(theta);			//Å©±â¸¦ ¸¹ÀÌ ÁÙÀÌ¸é -> ¹İÂ¦°Å¸®´Â Çö»ó(¿¡¾ó¸®¾î½Ì)ÀÌ ¹ß»ıÇÑ´Ù.
-	d = cos(theta);			//ÇØ°áÇÏ·Á¸é Lowpass FilteringÀÌ ÇÊ¿äÇÏ´Ù.
+	c = sin(theta);			//í¬ê¸°ë¥¼ ë§ì´ ì¤„ì´ë©´ -> ë°˜ì§ê±°ë¦¬ëŠ” í˜„ìƒ(ì—ì–¼ë¦¬ì–´ì‹±)ì´ ë°œìƒí•œë‹¤.
+	d = cos(theta);			//í•´ê²°í•˜ë ¤ë©´ Lowpass Filteringì´ í•„ìš”í•˜ë‹¤.
 	double det = a * d - b * c;
 	t1 = 0; t2 = 0;
 	//t1 = width, t2 = height;
@@ -516,7 +516,7 @@ POS2D MinusPOS2D(POS3D p, POS3D q)
 	return s;
 }
 
-POS3D Ax_3(float**A, POS3D p)//Çà·Ä A¿Í ±¸Á¶Ã¼ x¸¦ °öÇØÁÖ´Â ÇÔ¼ö
+POS3D Ax_3(float**A, POS3D p)//í–‰ë ¬ Aì™€ êµ¬ì¡°ì²´ xë¥¼ ê³±í•´ì£¼ëŠ” í•¨ìˆ˜
 {
 	POS3D s;
 	s.x = A[0][0] * p.x + A[0][1] * p.y + A[0][2] * p.z;
@@ -537,7 +537,7 @@ void ImageShowFloat(char* winname, float** image, int height, int width)
 	imshow(winname, img);
 	waitKey(0);
 }
-void SetMatrixA(int width, int height, float** A)//2Â÷¿ø¹è¿­ A¸¦ ¼³Á¤ÇÏ´Â ÇÔ¼ö
+void SetMatrixA(int width, int height, float** A)//2ì°¨ì›ë°°ì—´ Aë¥¼ ì„¤ì •í•˜ëŠ” í•¨ìˆ˜
 {
 	int f = 300;
 	POS2D p0;
@@ -558,11 +558,11 @@ void DrawDot(int**image, POS3D input, int width, int height)
 		}
 	}
 }
-void DrawLinePQ(POS3D p, POS3D q, float**A, int**image, int height, int width)//µÎ Á¡ p¿Í q¸¦ ÀÕ´Â ¼±ºĞÀ» ±×¸®´Â ÇÔ¼ö
+void DrawLinePQ(POS3D p, POS3D q, float**A, int**image, int height, int width)//ë‘ ì  pì™€ që¥¼ ì‡ëŠ” ì„ ë¶„ì„ ê·¸ë¦¬ëŠ” í•¨ìˆ˜
 {
 	float length = sqrt(SQ(p.x - q.x) + SQ(p.y - q.y) + SQ(p.z - q.z));
 	float delta = length / NP;
-	POS3D diff = MinusPOS3D(q, p); // q-p Â÷ º¤ÅÍ
+	POS3D diff = MinusPOS3D(q, p); // q-p ì°¨ ë²¡í„°
 								   /*
 								   line[0].x = p.x + 0 * delta * diff.x;
 								   line[0].y = p.y + 0 * delta * diff.y;
@@ -580,13 +580,13 @@ void DrawLinePQ(POS3D p, POS3D q, float**A, int**image, int height, int width)//
 								   line[i].y = p.y + i * delta * diff.y;
 								   line[i].z = p.z + i * delta * diff.z;
 								   output[i] = Ax_3(A, line[i]);
-								   //ÀÌ¸¦ ÀÌ¿ëÇÏ¿© ¼±ºĞ ±×¸®±â -> °úÁ¦
+								   //ì´ë¥¼ ì´ìš©í•˜ì—¬ ì„ ë¶„ ê·¸ë¦¬ê¸° -> ê³¼ì œ
 								   DrawDot(image, line[i], width, height);
 								   }
 								   ImageShow((char*)"test", image, height, width);
 								   */
 								   //190402
-								   //´õ °£´ÜÇÏ°Ô ÇÏ¸é
+								   //ë” ê°„ë‹¨í•˜ê²Œ í•˜ë©´
 	for (int i = 0; i < NP; i++) {
 		POS3D output, line;
 		float t = (float)i / NP;
@@ -608,7 +608,7 @@ void DrawLinePQ(POS3D p, POS3D q, float**A, int**image, int height, int width)//
 	}
 	//ImageShow((char*)"output", image, height, width);
 }
-void DrawRectangle(POS3D p1, POS3D p2, POS3D p3, POS3D p4, float**A, int**image, int height, int width)//p1-p2, p2-p4, p3-p4, p3-p1À» ¿¬°áÇÏ¿© Á÷»ç°¢ÇüÀ» ±×·ÁÁÖ´Â ÇÔ¼ö
+void DrawRectangle(POS3D p1, POS3D p2, POS3D p3, POS3D p4, float**A, int**image, int height, int width)//p1-p2, p2-p4, p3-p4, p3-p1ì„ ì—°ê²°í•˜ì—¬ ì§ì‚¬ê°í˜•ì„ ê·¸ë ¤ì£¼ëŠ” í•¨ìˆ˜
 {
 	DrawLinePQ(p1, p2, A, image, height, width);
 	DrawLinePQ(p2, p4, A, image, height, width);
@@ -632,7 +632,7 @@ void main_0402()
 	sz = qz + pz;
 	printf("\n(%f, %f, %f) + (%f, %f, %f) = (%f, %f, %f)", qx, qy, qz, px, py, pz, sx, sy, sz);
 	*/
-	//À§¿Í °°ÀÌ ÇÏ¸é ºÒÆí. ±¸Á¶Ã¼ ÀÌ¿ë
+	//ìœ„ì™€ ê°™ì´ í•˜ë©´ ë¶ˆí¸. êµ¬ì¡°ì²´ ì´ìš©
 	/*
 	struct POS3D {
 	float x, y, z;
@@ -646,7 +646,7 @@ void main_0402()
 	s.z = q.z + p.z;
 	printf("\n(%f, %f, %f) + (%f, %f, %f) = (%f, %f, %f)", q.x, q.y, q.z, p.x, p.y, p.z, s.x, s.y, s.z);
 	*/
-	//ÀÌ ¿ª½Ã Å©°Ô ´Ù¸£Áö ¾Ê´Ù. ÇÔ¼öÈ­
+	//ì´ ì—­ì‹œ í¬ê²Œ ë‹¤ë¥´ì§€ ì•Šë‹¤. í•¨ìˆ˜í™”
 	SetMatrixA(width, height, A);
 	POS3D p1 = SetPOS3D(100, 200, 600);
 	POS3D q1 = SetPOS3D(100, -200, 500);
@@ -667,7 +667,7 @@ void main_0402()
 	ImageShow((char*)"output", image, height, width);
 }
 
-void main_0402_2()//ÀÌ ¹æ½ÄÀº ±âÁØÁ¡(p1)¿¡¼­ºÎÅÍ x,yÃàÀ¸·Î i¸¸Å­ ¹ú¾îÁø Á÷»ç°¢ÇüÀ» ¿©·¯ ¹ø ±×·Á¼­ Ã¤¿ì´Â ¹æ½ÄÀ¸·Î, ¿øÇÏ´Â ¹Ù¿Í´Â Á¶±İ ´Ù¸£´Ù.
+void main_0402_2()//ì´ ë°©ì‹ì€ ê¸°ì¤€ì (p1)ì—ì„œë¶€í„° x,yì¶•ìœ¼ë¡œ ië§Œí¼ ë²Œì–´ì§„ ì§ì‚¬ê°í˜•ì„ ì—¬ëŸ¬ ë²ˆ ê·¸ë ¤ì„œ ì±„ìš°ëŠ” ë°©ì‹ìœ¼ë¡œ, ì›í•˜ëŠ” ë°”ì™€ëŠ” ì¡°ê¸ˆ ë‹¤ë¥´ë‹¤.
 {
 	int height = 1000; int width = 1000;
 	int** image = (int**)IntAlloc2(height, width);
@@ -688,7 +688,7 @@ void main_0402_2()//ÀÌ ¹æ½ÄÀº ±âÁØÁ¡(p1)¿¡¼­ºÎÅÍ x,yÃàÀ¸·Î i¸¸Å­ ¹ú¾îÁø Á÷»ç°¢Çü
 	}
 	ImageShow((char*)"output", image, height, width);
 }
-void main_0402_3()//p1¿¡¼­ a, b¸¸Å­ ¶³¾îÁø Á¡ x¸¦ ¿©·¯ ¹ø ±×¸®´Â ¹æ½Ä -> ºÎÀûÀı
+void main_0402_3()//p1ì—ì„œ a, bë§Œí¼ ë–¨ì–´ì§„ ì  xë¥¼ ì—¬ëŸ¬ ë²ˆ ê·¸ë¦¬ëŠ” ë°©ì‹ -> ë¶€ì ì ˆ
 {
 	int height = 1000; int width = 1000;
 	int** image = (int**)IntAlloc2(height, width);
@@ -717,7 +717,7 @@ POS3D MultiPOS3D(float a, POS3D p)
 	s.x = p.x * a; s.y = p.y * a; s.z = p.y * a;
 	return s;
 }
-//p1,p2,p3ÁÂÇ¥(Á÷»ç°¢ÇüÀÌ¹Ç·Î)¸¦ ÁÖ¾îÁÖ°í, ±× ³»ºÎÀÇ Á¡µéÀ» ¸ğµÎ °è»êÇÏ´Â ¹æ½Ä, ÇÔ¼öÈ­ ÇÒ °Í, ³»ºÎ¿¡ »çÁø ³ÖÀ» °Í ==> ·»´õ¸µ(Rendering) : 3Â÷¿ø»óÀÇ ¿µ»óÀ» 2Â÷¿øÀ¸·Î
+//p1,p2,p3ì¢Œí‘œ(ì§ì‚¬ê°í˜•ì´ë¯€ë¡œ)ë¥¼ ì£¼ì–´ì£¼ê³ , ê·¸ ë‚´ë¶€ì˜ ì ë“¤ì„ ëª¨ë‘ ê³„ì‚°í•˜ëŠ” ë°©ì‹, í•¨ìˆ˜í™” í•  ê²ƒ, ë‚´ë¶€ì— ì‚¬ì§„ ë„£ì„ ê²ƒ ==> ë Œë”ë§(Rendering) : 3ì°¨ì›ìƒì˜ ì˜ìƒì„ 2ì°¨ì›ìœ¼ë¡œ
 
 float SizeofVector(POS3D p1, POS3D p2)
 {
@@ -747,7 +747,7 @@ void Rendering2D(POS3D p1, POS3D p2, POS3D p3, int**image, int** image_out, int 
 
 	v21 = MinusPOS3D(p2, p1);
 	v31 = MinusPOS3D(p3, p1);
-	//ÀÏ´Ü image¸¦ ÇØ´ç ¿µ¿ªÀÇ Å©±â¿¡ ¸Â°Ô º¯Çü½ÃÅ²´Ù. width => |p2 - p1|, height => |p3 - p1|
+	//ì¼ë‹¨ imageë¥¼ í•´ë‹¹ ì˜ì—­ì˜ í¬ê¸°ì— ë§ê²Œ ë³€í˜•ì‹œí‚¨ë‹¤. width => |p2 - p1|, height => |p3 - p1|
 	int width_temp = width;
 	int height_temp = height;
 	int** image_temp = (int**)IntAlloc2(width_temp, height_temp);
@@ -778,7 +778,7 @@ void Rendering2D(POS3D p1, POS3D p2, POS3D p3, int**image, int** image_out, int 
 	}
 }
 
-//À§¿Í ºñ½ÁÇÑ ¹æ½ÄÀ¸·Î Å¥ºê ¸¸µé°í, ¸é¿¡´Ù°¡ »çÁøÀ» ³ÖÀ» °Í(Ãß°¡Á¡¼ö), °úÁ¦ Á¦ÃâÇÒ ¶§ ¼Ò½º¶û °á°ú Ä¸ÃÄ
+//ìœ„ì™€ ë¹„ìŠ·í•œ ë°©ì‹ìœ¼ë¡œ íë¸Œ ë§Œë“¤ê³ , ë©´ì—ë‹¤ê°€ ì‚¬ì§„ì„ ë„£ì„ ê²ƒ(ì¶”ê°€ì ìˆ˜), ê³¼ì œ ì œì¶œí•  ë•Œ ì†ŒìŠ¤ë‘ ê²°ê³¼ ìº¡ì³
 void Rendering3D(POS3D p1, POS3D p2, POS3D p3, POS3D p4, int**image, int**image_out, int height, int width, int height_out, int width_out)
 {
 	int** image_temp1 = (int**)IntAlloc2(height_out, width_out);
