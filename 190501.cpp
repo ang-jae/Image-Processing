@@ -945,7 +945,7 @@ void GeometricTransform(int**block, int**block_changed, int height_b, int width_
 {
 	//	scanf_s("%d", &num);
 	switch (num) {
-	
+
 	case 0:
 		for (int i = 0; i < height_b; i++) {
 			for (int j = 0; j < width_b; j++) {
@@ -1044,9 +1044,9 @@ void main()
 	for (int i = 0; i < 8; i++)
 	{
 		block_changed[i] = (int**)IntAlloc2(height_t, width_t);
-		GeometricTransform(block, block_changed[i], height_t, width_t, i + 1);
+		GeometricTransform(block, block_changed[i], height_t, width_t, i);
 		pos[i] = TemplateMatching(image, height, width, block_changed[i], height_t, width_t, &err[i]);
-		
+
 		if (err[i] == 0)
 		{
 			LightenImage(block_changed[i], height_t, width_t, 30);//잘 보이게 하기 위해서
@@ -1054,9 +1054,9 @@ void main()
 			printf("\nAnswer is : %d", i);
 			printf("\nAnd Err is %d, pos = (%f, %f)", err[i], pos[i].x, pos[i].y);
 		}
-//		ImageShow((char*)"image", image, height, width);
+		//		ImageShow((char*)"image", image, height, width);
 	}
-	
+
 	ImageShow((char*)"image", image, height, width);
 	//	for (int i = 0; i < 8; i++) ImageShow((char*)"image", block_changed[i], height, width);
 }
