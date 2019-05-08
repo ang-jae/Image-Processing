@@ -1139,3 +1139,12 @@ void main()
 	ImageShow((char*)"read", block, 200, 200);
 	ImageShow((char*)"write", lena, height_2, width_2);
 }
+//앞으로 할 것들
+//image를 N*N block으로 나눈 다음
+//block의 평균 계산하고 저장
+//block_mean[][] : 평균 제거
+//ReadBlock -> dx, dy = 2N으로. Dblock[][]
+//Dblock2[][] : NxN (downsampling)
+//Dblock2_mean[][] : 평균 제거
+//block_mean과 Dblock2_mean의 차의 절댓값의 합(=err)계산
+//이 작업을 모든 2N*2N에 대해서 하고, 그 중에서 error가 제일 작은 블럭의 위치(x_opt, y_opt)를 저장
