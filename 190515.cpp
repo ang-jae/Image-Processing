@@ -1162,23 +1162,22 @@ void Cutting(int**image, int height, int width, int y, int x, int N, int**block)
 }
 
 struct Block {
-	int x, y, avg ;
+	int x, y, avg, gt;
 };
 
-Block SetBlock(int x, int y, int avg)
+Block SetBlock(int x, int y, int avg, int gt)
 {
 	Block tmp;
-	tmp.x = x; tmp.y = y; tmp.avg = avg;
+	tmp.x = x; tmp.y = y; tmp.avg = avg; tmp.gt = gt;
 	return (tmp);
 }
 
 Block BlockCompareWithDblocks(int**image, int height, int width, int**block, int**block_mean,
-	int** Dblock, int**Dblock2, int**Dblock2_mean, int y, int x, int N)
+	int** Dblock, int**Dblock2, int**Dblock2_mean, int y, int x, int N)//x, y : block의 위치
 {
 	Block Block;
-	SetBlock(0, 0, 0);
 	int Err_min = INT_MAX;
-	//block 1
+	//block
 	Cutting(image, height, width, y, x, N, block);
 	Block.avg = GetBlockAvg(image, N, N, y, x, N);
 	RemoveMean(block, N, block_mean);
@@ -1187,7 +1186,7 @@ Block BlockCompareWithDblocks(int**image, int height, int width, int**block, int
 	{
 		for (int j = 0; j < width - (2 * N); j++)
 		{
-			ReadBlock(image, height, width, i + y, j + x, 2 * N, 2*N, Dblock);
+			ReadBlock(image, height, width, i + y, j + x, 2 * N, 2 * N, Dblock);
 			DownSize2(Dblock, 2 * N, 2 * N, Dblock2);
 			RemoveMean(Dblock2, N, Dblock2_mean);
 			int Err = FindErr(block_mean, Dblock2_mean, j + x, i + y, N, N, N, N);
@@ -1203,26 +1202,31 @@ Block BlockCompareWithDblocks(int**image, int height, int width, int**block, int
 }
 
 
-Block EncodingImage(int**image, int height, int width, int**block, int**block_mean,
+Block*EncodingImage(int**image, int height, int width, int**block, int**block_mean,
 	int** Dblock, int**Dblock2, int**Dblock2_mean, int N)
 {
-	Block Block;
-	SetBlock(0, 0, 0);
-	for (int i = 0; i < height; i += N)
+	int length = height * width / (N * N);
+	Block*Blocks = (Block*)calloc(length, sizeof(Block));
+	for (int i = 0; i < height - N; i += N)
 	{
-		for (int j = 0; j < width; j += N)
+		for (int j = 0; j < width - N; j += N)
 		{
-			Block = BlockCompareWithDblocks(image, height, width, block, block_mean, Dblock, Dblock2, Dblock2_mean, i, j, N);
-			if (Block.x >= width || Block.y >= height) break;
-
+			for (int k = 0; k < width*height / (N*N); k++)
+			{
+				Blocks[k] = BlockCompareWithDblocks(image, height, width, block, block_mean, Dblock, Dblock2, Dblock2_mean, i, j, N);
+				if (Blocks[k].x >= width || Blocks[k].y >= height) break;
+			}
 		}
 	}
-	return Block;
+		return Blocks;
 }
 
 void main()
 {
-	int height, width, N, avg;
+	int height, width, N, length;
+	length = height * width / (N * N);
+//	Block Block;
+	Block* Blocks = (Block*)calloc(length, sizeof(Block));
 	N = 8;
 	int** image = ReadImage((char*)"LENA256.bmp", &height, &width);
 	int** block = IntAlloc2(N, N);
@@ -1230,8 +1234,14 @@ void main()
 	int** block_mean = IntAlloc2(N, N);
 	int** Dblock2 = IntAlloc2(N, N);
 	int** Dblock2_mean = IntAlloc2(N, N);
-	Block Block;
-	Block = EncodingImage(image, height, width, block, block_mean, Dblock, Dblock2, Dblock2_mean, N);
+	
+//	Block = BlockCompareWithDblocks(image, height, width, block, block_mean, Dblock, Dblock2, Dblock2_mean, 0, 0, N);
 
-	printf("%f, %f, avg = %d", Block.x, Block.y, Block.avg);
+	Blocks = EncodingImage(image, height, width, block, block_mean, Dblock, Dblock2, Dblock2_mean, N);
+	for(int i = 0; i < length ; i ++) printf("\nx, y = %d, %d, avg = %d", Blocks[i].x, Blocks[i].y, Blocks[i].avg);
+	ImageShow((char*)"block", block, N, N);
+	ImageShow((char*)"Dblock", Dblock2, 2*N, 2*N);
+
+	ImageShow((char*)"Dblock2", Dblock2, N, N);
 }
+//Error값이 너무 큰 경우, block을 4분의1로 쪼개서 같은 작업을 한다.
